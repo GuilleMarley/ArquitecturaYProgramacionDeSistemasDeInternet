@@ -23,7 +23,7 @@ app.get("/", ( req: Request, res: Response ) => {
     
     try{
 
-        if(isNaN(parseInt(zip))){
+        if(isNaN(parseInt(zip))){//isNaN = is not a number
            res.status(400).send("El zip tiene que ser un numero")
            return 
         }
