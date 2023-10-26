@@ -14,3 +14,4 @@ const PersonSchema = new Schema({
 })
 
 export const PersonModel = mongoose.model<PersonModelType>('person', PersonSchema)
+
