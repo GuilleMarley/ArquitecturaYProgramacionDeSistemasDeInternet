@@ -25,8 +25,9 @@ app.get("/test", (_req: Request, res: Response) => {
         res.status(500).send(e)
     }
 }).post("/addPerson",async (req: Request, res: Response) => {
+    console.log("Aqui entro 1")
     const person = req.body
-    if(!person.name || !person.age){
+    if(!person.name || !person.age || !person.dni){
         res.status(403).send()
         return
     }
@@ -38,14 +39,19 @@ app.get("/test", (_req: Request, res: Response) => {
         return
     }
 
-    const nuevaPersona = await PersonModel.create({name:person.name, age: person.age})
+    const nuevaPersona = await PersonModel.create({name:person.name, age: person.age, dni: person.dni})
+    try{
     res.send({
         name: nuevaPersona.name,
         age: nuevaPersona.age,
+        dni: nuevaPersona.dni,
         id: nuevaPersona.id
     })
+    }catch(e){
+        console.log(e);
+    }
 })
 
-await mongoose.connect("LinkAlCluster")
+await mongoose.connect("mongodb+srv://gmartinez:1234@cluster.dipgaht.mongodb.net/?retryWrites=true&w=majority")
 
 app.listen(3000)

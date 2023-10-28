@@ -17,14 +17,20 @@ app.get("/pj/:id", async (req: Request, res: Response)=> {
     
     try{
 
-        /*if(isNaN(parseInt(id))){//isNaN = is not a number
+        if(isNaN(parseInt(id))){//isNaN = is not a number
            res.status(400).send("El id tiene que ser numero")
            return 
-        }*/
+        }
         
         const character = await getDataName(id)
         res.send(character)
         console.log(arrPjs)
+        /*const arrPjsMapped = arrPjs.map(p => p.id).some(p => p ==id)
+        console.log(arrPjsMapped)
+        console.log(id)
+        if(!arrPjsMapped){
+            console.log("arrPjsMapped")
+        }*/
 
     } catch(e){
         console.log(e)
@@ -36,6 +42,11 @@ app.get("/pj/:id", async (req: Request, res: Response)=> {
     const page = req.params.page
 
     try{
+
+        if(page < 0){
+            res.status(400).send("La pagina no puede ser negativa.")
+        }
+
         const list = await getDataAllName(page)
         res.send(list)
          
@@ -48,6 +59,11 @@ app.get("/pj/:id", async (req: Request, res: Response)=> {
     const page = req.params.page
 
     try{
+
+        if(page < 0){
+            res.status(400).send("La pagina no puede ser negativa.")
+        }
+
         const list = await getDataAllLocation(page)
         res.send(list)
          
@@ -58,9 +74,14 @@ app.get("/pj/:id", async (req: Request, res: Response)=> {
 }).get("/location/:id", async (req: Request, res: Response)=> {
 
     const id = req.params.id
-    
+
     try{
-                
+        
+        if(isNaN(parseInt(id))){//isNaN = is not a number
+            res.status(400).send("El id tiene que ser numero")
+            return 
+         }
+          
         const character = await getDataLocation(id)
         res.send(character)
 
@@ -71,7 +92,12 @@ app.get("/pj/:id", async (req: Request, res: Response)=> {
 
 }).get("/genderFilter/:gender",(req: Request, res: Response)=> {
 
-    const gender = req.params.gender
+    let gender = req.params.gender
+    if(gender == "male"){
+        gender = "Male"
+    } else if (gender == "female"){
+        gender = "Female"
+    }
     
     try{
         console.log("\nArray completo:\n")
@@ -87,7 +113,12 @@ app.get("/pj/:id", async (req: Request, res: Response)=> {
 
 }).get("/statusFilter/:status",(req: Request, res: Response)=> {
 
-    const status = req.params.status
+    let status = req.params.status
+    if(status == "dead"){
+        status = "Dead"
+    } else if (status == "alive"){
+        status = "Alive"
+    }
     
     try{
         console.log("\nArray completo:\n")
@@ -127,6 +158,75 @@ app.get("/pj/:id", async (req: Request, res: Response)=> {
         console.log("\nArray filtrado:\n")
         console.log(arrLcts.filter(f => f.dimension === dimension))
         res.send(arrLcts.filter(f => f.dimension === dimension))
+
+    } catch(e){
+        console.log(e)
+        res.status(500).send("Error")
+    }
+
+}).get("/borrarPj/:id",(req: Request, res: Response)=> {
+
+    const id = req.params.id
+
+    try{
+        
+        if(isNaN(parseInt(id))){//isNaN = is not a number
+            res.status(400).send("El id tiene que ser numero")
+            return 
+        }
+
+        console.log("\nArray completo:\n")
+        console.log(arrPjs)
+
+        if(!arrPjs.map(p => p.id).some(p => p == id)){
+            res.send("No hay personajes con ese id")
+            return
+        }
+
+        const arrPjsMapped = arrPjs.map(p => p.id)
+        const pos = arrPjsMapped.indexOf(parseInt(id))
+        if(pos == -1){
+            res.send("Ese personaje no esta en el array")
+            return
+        }
+        arrPjs.splice(pos, 1)
+        console.log(arrPjs)
+        res.send(arrPjs)
+        //console.log(pos)
+
+    } catch(e){
+        console.log(e)
+        res.status(500).send("Error")
+    }
+
+}).get("/borrarLc/:id",(req: Request, res: Response)=> {
+
+    const id = req.params.id
+
+    try{
+
+        if(isNaN(parseInt(id))){//isNaN = is not a number
+            res.status(400).send("El id tiene que ser numero")
+            return 
+        }
+
+        console.log("\nArray completo:\n")
+        console.log(arrLcts)
+
+        if(!arrLcts.map(p => p.id).some(p => p == id)){
+            res.send("No hay localizaciones con ese id")
+            return
+        }
+
+        const arrLctsMapped = arrLcts.map(p => p.id)
+        const pos = arrLctsMapped.indexOf(parseInt(id))
+        if(pos == -1){
+            res.send("Esa localizacion no esta en el array")
+            return
+        }
+        arrLcts.splice(pos, 1)
+        console.log(arrLcts)
+        res.send(arrLcts)
 
     } catch(e){
         console.log(e)
