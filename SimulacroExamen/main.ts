@@ -1,8 +1,15 @@
-export function add(a: number, b: number): number {
-  return a + b;
-}
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { GraphQLError } from "graphql";
 
-// Learn more at https://deno.land/manual/examples/module_metadata#concepts
-if (import.meta.main) {
-  console.log("Add 2 + 3 =", add(2, 3));
+import { resolvers } from "./resolvers/Query.ts";
+import typedefs from "./gpl/schema.ts";
+
+try{
+  const server = new ApolloServer({ typeDefs: typedefs, resolvers })
+  const {url} = await startStandaloneServer(server)
+  console.log(`🚀 Funcionando en ${url}`)
+
+}catch(e){
+  console.log(e);
 }
