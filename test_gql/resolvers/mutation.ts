@@ -5,8 +5,6 @@ export const Mutation = {
     createContact: async (_parent: unknown, args: { contact: ContactInput }) => {
         const { dni, name, email, cp, isoCountryCode } = args.contact;
 
-        // ... (Your existing validation logic goes here)
-
         // check if dni already exists
         const exists = await ContactModel.exists({ dni });
         if (exists) {
